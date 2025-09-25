@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Callback</title>
+  </head>
+  <body>
+    <!-- Callback : 완료되면 다시 연락주세요! -->
+    <button id="btn">이걸 누르면</button>
+    <button id="sync" onclick="func1()">동기</button>
+    <button id="async" onclick="func2()">비동기</button>
+    <button id="async" onclick="func3()">비동기2</button>
+    <script>
+      // () => {alert("콜백!");} <- 얘도 콜백 함수임
+      //눌렀다는 이벤트에 대한 대응 : 콜백
+      document.querySelector("#btn").addEventListener("click", () => {
+        alert("콜백!");
+      });
+
+      function func1() {
+        //동기
+        console.log("메세지 1");
+        console.log("메세지 2");
+        console.log("메세지 3");
+      }
+
+      function func2() {
+        //비동기 -> 호출 순서 -> 실행 순서가 일치하지 않음
+        setTimeout(() => console.log("메세지 111"), 3000); //3000ms -> 3초
+        setTimeout(() => console.log("메세지 222"), 2000);
+        setTimeout(() => console.log("메세지 333"), 1000);
+      }
+
+      function func3() {
+        //외부에서 예측하기 어려운 데이터나 다른 네트워크에서의 요청등을 주로 다룬다.
+        //언제 종료될지 모른다.
+        setTimeout(() => console.log("메세지 111"), Math.random() * 3000);
+        setTimeout(() => console.log("메세지 222"), Math.random() * 3000);
+        setTimeout(() => console.log("메세지 333"), Math.random() * 3000);
+        //그럼에도 불구하고 동기처럼 쓴다.
+        //화면을 조작하거나 데이터를 변경하거나 해야하는데, 절차적으로 정리가 안되어 있으면 문제가 되기 때문에 그럼에도 동기처럼 쓴다?
+      }
+    </script>
+  </body>
+</html>
