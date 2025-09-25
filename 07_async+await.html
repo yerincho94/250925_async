@@ -5,5 +5,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Async&Await</title>
   </head>
-  <body></body>
+  <body>
+    <input id="copy" />
+    <input id="paste" />
+    <button id="copyBtn">복사</button>
+    <button id="pasteBtn">붙혀넣기</button>
+
+    <script>
+      // async, await -> 일반적인 함수를 Promise로 만들어주는 문법
+      function hello() {
+        console.log("hello");
+        return "hello";
+      }
+      async function hello2() {
+        console.log("hello22");
+        return "hello222";
+      }
+      console.log(hello());
+      hello2().then((v) => console.log(v));
+      console.log(hello2());
+
+      //js에서 시간 대기를 걸고 싶으면 아래 구문 밖에 답이 없음 (sleep, wait 없기 때문)
+      const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+      //Promise는 then으로 처리해야 하는데, 나는 이게 싫으면 await사용하면 되는데 async function 내부에서만 사용할 수 있다는 것만 기억!!!
+
+      function fun1() {
+        console.log("a1");
+        delay(1000).then(() => console.log("a2"));
+        // console.log("a2");
+      }
+      fun1();
+
+      async function fun2() {
+        console.log("b1");
+        await delay(1000); //await는 async안에 있어야한다.
+        console.log("b2");
+        //async, await
+        //async -> 일반 함수를 Promise화 시킨다
+        //await -> Promise를 일반적 동기처리, 한단계 한단계 처럼 처리해준다. async 안에 있어야 한다.
+      }
+      fun2();
+
+      //화살표 함수는 async 어케 붙혀?
+      const copy = document.querySelector("#copy");
+      const copyBtn = document.querySelector("#copyBtn");
+      const paste = document.querySelector("#paste");
+      const pasteBtn = document.querySelector("#pasteBtn");
+      /*
+        copyBtn.addEventListener("click", () => {
+        navigator.clipboard
+          .writeText(copy.value)
+          .then(() => console.log("복사 성공!")) 
+          .catch(() => "복사 실패!"); 
+        // console.log("복사했습니다.");
+        console.log("뒤");
+      });
+      */
+      copyBtn.addEventListener("click", async () => {
+        console.log("앞");
+        await navigator.clipboard
+          .writeText(copy.value)
+          .then(() => console.log("복사 성공!")) //뒤에 있는 then도 어차피 같이 실행됨.
+          .catch(() => "복사 실패!"); //이경우에는 내부에러가 외부로 throw가 안됨.
+        // console.log("복사했습니다.");
+        console.log("뒤");
+      });
+
+      pasteBtn.addEventListener("click", async () => {
+        console.log("앞");
+        await navigator.clipboard
+          .readText(copy.value)
+          .then((v) => {
+            paste.value = v;
+            console.log("붙혀넣기 성공!");
+          }) //뒤에 있는 then도 어차피 같이 실행됨.
+          .catch(() => "붙혀넣기 실패!"); //이경우에는 내부에러가 외부로 throw가 안됨.
+        // console.log("복사했습니다.");
+        console.log("뒤");
+      });
+    </script>
+  </body>
 </html>
